@@ -1,0 +1,281 @@
+# /aiengine/src/aiengine/config/ai_system.yaml
+system:
+  name: "Intel Universal AI System"
+  version: "1.0.0"
+  environment: "${AI_ENVIRONMENT:-production}"
+
+# Network topology - easily changeable
+networks:
+  ai_engine:
+    host: "${AI_ENGINE_HOST:-10.223.210.70}"
+    description: "Primary AI Engine Server"
+
+  monitoring:
+    host: "${MONITORING_HOST:-10.223.251.30}"
+    description: "Prometheus & Alerting Server"
+
+  analytics:
+    host: "${ANALYTICS_HOST:-10.106.208.44}"
+    description: "Grafana & Analytics Server"
+
+  database:
+    host: "${DATABASE_HOST:-10.223.210.70}"
+    description: "PostgreSQL Database Server"
+
+# Service definitions with network assignments
+services:
+  # AI Engine Services (on ai_engine network)
+  ai_engine_main:
+    network: "ai_engine"
+    port: 8000
+    path: "/api"
+    health_check: "/api/system_status"
+
+  alert_processor:
+    network: "ai_engine"
+    port: 8052
+    path: "/alerts"
+
+  enhanced_dashboard:
+    network: "ai_engine"
+    port: 5000
+    path: "/"
+
+  metrics_exporter:
+    network: "ai_engine"
+    port: 32287
+    path: "/metrics"
+    description: "Exposes metrics for Prometheus scraping"
+
+  basic_dashboard:
+    network: "ai_engine"
+    port: 8082
+    path: "/"
+
+  domain_adapter:
+    network: "ai_engine"
+    port: 8083
+    path: "/"
+
+  learning_engine:
+    network: "ai_engine"
+    port: 8877
+    path: "/"
+
+  # Monitoring Services (on monitoring network)
+  prometheus:
+    network: "monitoring"
+    port: 9090
+    path: "/"
+    scrape_targets:
+      - service: "metrics_exporter"
+        interval: "15s"
+
+  alertmanager:
+    network: "monitoring"
+    port: 9093
+    path: "/"
+
+  node_exporter:
+    network: "monitoring"
+    port: 9100
+    path: "/metrics"
+
+  # Analytics Services (on analytics network)
+  grafana:
+    network: "analytics"
+    port: 32000
+    path: "/"
+    datasources:
+      - name: "prometheus"
+        service: "prometheus"
+
+  kafka:
+    network: "analytics"
+    port: 30092
+
+  # Database Services
+  postgresql:
+    network: "database"
+    port: 9187
+
+  # Infrastructure Services
+  redis:
+    network: "ai_engine"
+    port: 6379
+
+  mongodb:
+    network: "ai_engine"
+    port: 27017
+
+# Environment-specific overrides
+environments:
+  development:
+    description: "Local development environment - all services on localhost"
+    networks:
+      ai_engine:
+        host: "localhost"
+        description: "Local AI Engine"
+      monitoring:
+        host: "localhost"
+        description: "Local Prometheus"
+      analytics:
+        host: "localhost"
+        description: "Local Grafana"
+      database:
+        host: "localhost"
+        description: "Local Database"
+
+    # Development-specific service overrides
+    services:
+      postgresql:
+        port: 5432  # Standard PostgreSQL port for dev
+      redis:
+        port: 6379
+      mongodb:
+        port: 27017
+
+    # Development settings
+    settings:
+      debug: true
+      log_level: "DEBUG"
+      auto_reload: true
+      metrics_interval: 30
+
+  staging:
+    description: "Staging environment - dedicated staging servers"
+    networks:
+      ai_engine:
+        host: "10.223.210.71"
+        description: "Staging AI Engine Server"
+      monitoring:
+        host: "10.223.251.31"
+        description: "Staging Prometheus Server"
+      analytics:
+        host: "10.106.208.45"
+        description: "Staging Grafana Server"
+      database:
+        host: "10.223.210.71"
+        description: "Staging Database Server"
+
+    # Staging-specific service overrides
+    services:
+      ai_engine_main:
+        port: 8001  # Different port to avoid conflicts
+      metrics_exporter:
+        port: 32288  # Different metrics port
+
+    # Staging settings
+    settings:
+      debug: false
+      log_level: "INFO"
+      auto_reload: false
+      metrics_interval: 15
+      backup_enabled: true
+
+  production:
+    description: "Production environment - distributed across multiple servers"
+    networks:
+      ai_engine:
+        host: "10.223.210.70"
+        description: "Production AI Engine Server"
+      monitoring:
+        host: "10.223.251.30"
+        description: "Production Prometheus Server"
+      analytics:
+        host: "10.106.208.44"
+        description: "Production Grafana Server"
+      database:
+        host: "10.223.210.70"
+        description: "Production Database Server"
+
+    # Production-specific service overrides
+    services:
+      ai_engine_main:
+        port: 8000
+        replicas: 2  # Load balanced instances
+        health_check_interval: 30
+
+      metrics_exporter:
+        port: 32287
+        retention: "90d"
+
+      prometheus:
+        retention: "90d"
+        storage_size: "100GB"
+
+      grafana:
+        admin_user: "admin"
+        session_timeout: "24h"
+
+      postgresql:
+        pool_size: 20
+        max_connections: 100
+        backup_schedule: "0 2 * * *"  # Daily at 2 AM
+
+    # Production settings
+    settings:
+      debug: false
+      log_level: "INFO"
+      auto_reload: false
+      metrics_interval: 15
+      backup_enabled: true
+      monitoring_enabled: true
+      alerting_enabled: true
+      ssl_enabled: true
+      rate_limiting: true
+
+    # Production security settings
+    security:
+      encryption_at_rest: true
+      encryption_in_transit: true
+      audit_logging: true
+      access_control: "rbac"
+
+    # Production performance settings
+    performance:
+      cache_enabled: true
+      compression_enabled: true
+      connection_pooling: true
+      load_balancing: true
+
+    # Production backup and disaster recovery
+    backup:
+      enabled: true
+      schedule: "0 2 * * *"  # Daily at 2 AM
+      retention_days: 30
+      remote_backup: true
+
+    disaster_recovery:
+      enabled: true
+      failover_timeout: 300  # 5 minutes
+      backup_sites:
+        - "10.223.210.75"  # DR site 1
+        - "10.106.208.50"  # DR site 2
+
+# Integration settings by environment
+integrations:
+  prometheus:
+    enabled: true
+    scrape_interval: "15s"
+    retention: "${PROMETHEUS_RETENTION:-30d}"
+
+  grafana:
+    enabled: true
+    admin_user: "${GRAFANA_ADMIN_USER:-admin}"
+    api_key: "${GRAFANA_API_KEY:-}"
+
+  database:
+    type: "postgresql"
+    ssl_mode: "${DB_SSL_MODE:-prefer}"
+    pool_size: "${DB_POOL_SIZE:-10}"
+
+  alerting:
+    enabled: "${ALERTING_ENABLED:-true}"
+    slack_webhook: "${SLACK_WEBHOOK_URL:-}"
+    email_smtp: "${SMTP_SERVER:-}"
+
+  security:
+    jwt_secret: "${JWT_SECRET:-}"
+    api_rate_limit: "${API_RATE_LIMIT:-100}"
+    cors_origins: "${CORS_ORIGINS:-*}"

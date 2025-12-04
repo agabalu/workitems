@@ -1,0 +1,52 @@
+# config/integrations.yaml - Universal Neural System Integration Configuration
+prometheus:
+  url: "http://localhost:9090"
+  metrics_port: 8001
+  polling_interval: 30
+  queries:
+    cpu_high: "avg(cpu_usage_percent) > 80"
+    memory_high: "avg(memory_usage_percent) > 85"
+    error_rate_high: "rate(http_errors_total[5m]) > 0.05"
+    neural_confidence_low: "universal_neural_confidence_avg < 0.5"
+    neural_execution_slow: "universal_neural_execution_time_avg > 5.0"
+
+grafana:
+  url: "http://localhost:3000"
+  username: "admin"
+  password: "admin"
+  datasources:
+    - name: "Universal Neural Prometheus"
+      type: "prometheus"
+      url: "http://localhost:8001"
+
+kafka:
+  bootstrap_servers:
+    - "localhost:9092"
+  topics:
+    - "neural-tasks"
+    - "neural-results"
+    - "neural-learning"
+  group_id: "universal-neural-system"
+
+universal_neural:
+  monitoring:
+    enabled: true
+    dashboard_refresh: 30
+    metrics_retention: "7d"
+  learning:
+    continuous_enabled: true
+    save_interval: 100
+    checkpoint_retention: 10
+  api:
+    rate_limit: "1000 per minute"
+    authentication: false
+    cors_enabled: true
+
+webhooks:
+  enabled: true
+  authentication_required: false
+  rate_limit: "100 per minute"
+  endpoints:
+    task_completion: "/webhook/task-completed"
+    learning_update: "/webhook/learning-updated"
+    health_alert: "/webhook/health-alert"

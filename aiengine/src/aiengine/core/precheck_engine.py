@@ -322,7 +322,6 @@ class PrecheckEngine:
             config_path = os.path.join(
                 os.path.dirname(__file__),
                 '..',
-                'precheck',
                 'config',
                 'precheck_config.json'
             )
@@ -351,7 +350,6 @@ class PrecheckEngine:
             config_path = os.path.join(
                 os.path.dirname(__file__),
                 '..',
-                'precheck',
                 'config',
                 'precheck_config.json'
             )

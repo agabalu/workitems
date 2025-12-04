@@ -1,0 +1,17 @@
+[Unit]
+Description=AI Engine Direct Webhook Service
+After=network.target kafka.service
+Requires=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/aiengine/src/aiengine
+ExecStart=/usr/bin/python3 /aiengine/src/aiengine/webhook_service.py
+Restart=always
+RestartSec=10
+Environment=PYTHONPATH=/aiengine/src/aiengine
+Environment=PORT=9095
+
+[Install]
+WantedBy=multi-user.target

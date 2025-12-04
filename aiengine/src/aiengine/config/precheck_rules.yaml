@@ -1,0 +1,460 @@
+
+# config/precheck_rules.yaml - Comprehensive Precheck Exception Business Rules
+# Enhanced with complete BA team documentation (19 precheck types)
+# Last updated: November 2024
+
+# Overriding Principle from BA Documentation
+overriding_principle:
+  false_positive_auto_waiver: true
+  ba_team_authority: "Always authorized for false-positive violations due to precheck bugs"
+  description: "If ingredient failure is a false-positive violation due to a precheck bug, BA precheck team is always authorized to issue a waiver until the precheck issue can be fixed"
+
+# Comprehensive Precheck Rules (19 types from BA documentation)
+precheck_rules:
+  # Existing rules enhanced
+  BATChk:
+    intel:
+      auto_approve: true
+      condition: "WSE-driven waiver request"
+      escalation_required: false
+      approver: "BA_TEAM"
+      notes: "WSE-driven, if they request a waiver, it can be granted by BA team"
+      auto_decision: "approve"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  BinaryScanChk:
+    intel:
+      auto_approve: false
+      condition: "PSXT validation required"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny", "Kar, Rajdeep "]
+      approver: "ESCALATION"
+      validation_required: "PSXT"
+      notes: "CQN/SDLe-driven, must validate with PSXT that subsequent ingredient submission will rectify this"
+      auto_decision: "escalate"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  DriverChk:
+    intel:
+      auto_approve: false
+      condition: "must_have_inf_if_driver"
+      escalation_required: false
+      approver: "REJECT"
+      notes: "If ingredient is marked as 'driver', it'd better have at least one INF. No waiver should be given"
+      auto_decision: "reject"
+    tpv:
+      auto_approve: false
+      condition: "must_have_inf_if_driver"
+      escalation_required: false
+      approver: "REJECT"
+      notes: "If ingredient is marked as 'driver', it'd better have at least one INF. No waiver should be given"
+      auto_decision: "reject"
+
+  SDLeChk:
+    intel:
+      auto_approve: false
+      condition: "mandatory_post_alpha"
+      milestone_dependent: true
+      milestone_restriction: "post_alpha"
+      escalation_required: false
+      approver: "REJECT"
+      notes: "Mandatory as of Alpha, critical for BKC shipped to customers. No waiver should be given"
+      auto_decision: "reject"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  INFCompChk:
+    intel:
+      auto_approve: true
+      condition: "pre_alpha_2week_waiver"
+      milestone_dependent: true
+      milestone_restriction: "pre_alpha"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver up until Alpha milestone, but must be escalated to Lonny  & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "pre_alpha_2week_waiver"
+      milestone_dependent: true
+      milestone_restriction: "pre_alpha"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver up until Alpha milestone, but must be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+
+  # New comprehensive rules from BA documentation
+  EwdkOsChk:
+    intel:
+      auto_approve: true
+      condition: "ewdk_os_compatibility"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "EWDK/OS Pair Mapping compatibility validation"
+      auto_decision: "approve"
+    tpv:
+      auto_approve: true
+      condition: "ewdk_os_compatibility"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "EWDK/OS Pair Mapping compatibility validation"
+      auto_decision: "approve"
+
+  InfDeclarativeChk:
+    intel:
+      auto_approve: true
+      condition: "pre_alpha_2week_waiver"
+      milestone_dependent: true
+      milestone_restriction: "pre_alpha"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver up until Alpha milestone, but must be escalated to Lonny  & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "pre_alpha_2week_waiver"
+      milestone_dependent: true
+      milestone_restriction: "pre_alpha"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver up until Alpha milestone, but must be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+
+  InfHSAChk:
+    intel:
+      auto_approve: false
+      condition: "no_exception_use_json_metadata"
+      escalation_required: false
+      approver: "REJECT"
+      notes: "No exception/waiver should be granted. Ingredients without valid HSA can mark oemPreInstallPkg JSON metadata as isApplicable=false"
+      auto_decision: "reject"
+    tpv:
+      auto_approve: false
+      condition: "no_exception_use_json_metadata"
+      escalation_required: false
+      approver: "REJECT"
+      notes: "No exception/waiver should be granted. Ingredients without valid HSA can mark oemPreInstallPkg JSON metadata as isApplicable=false"
+      auto_decision: "reject"
+
+  InfWCOSChk:
+    intel:
+      auto_approve: true
+      condition: "not_mandatory_platform_config_issue"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "No need for waivers/exceptions as not mandatory. Any failures indicate platform config not setup properly"
+      auto_decision: "approve"
+    tpv:
+      auto_approve: true
+      condition: "not_mandatory_platform_config_issue"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "No need for waivers/exceptions as not mandatory. Any failures indicate platform config not setup properly"
+      auto_decision: "approve"
+
+  IngUWDApiChk:
+    intel:
+      auto_approve: true
+      condition: "not_mandatory_platform_config_issue"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "No need for waivers/exceptions as not mandatory. Any failures indicate platform config not setup properly"
+      auto_decision: "approve"
+    tpv:
+      auto_approve: true
+      condition: "not_mandatory_platform_config_issue"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "No need for waivers/exceptions as not mandatory. Any failures indicate platform config not setup properly"
+      auto_decision: "approve"
+
+  IPScanChk:
+    intel:
+      auto_approve: false
+      condition: "PSXT validation required"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny", "Kar, Rajdeep"]
+      approver: "ESCALATION"
+      validation_required: "PSXT"
+      notes: "CQN/SDLe-driven, must validate with PSXT that subsequent ingredient submission will rectify this"
+      auto_decision: "escalate"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  MsftSignChk:
+    intel:
+      auto_approve: false
+      condition: "escalation_required_no_waiver"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "ESCALATION"
+      notes: "Check for Correct Signature - Escalation to Lonny & Rajdeep required"
+      auto_decision: "escalate"
+    tpv:
+      auto_approve: false
+      condition: "escalation_required_no_waiver"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "ESCALATION"
+      notes: "Check for Correct Signature - Escalation to Lonny & Rajdeep required"
+      auto_decision: "escalate"
+
+  PathLengthChk:
+    intel:
+      auto_approve: true
+      condition: "ba_team_assessment_required"
+      escalation_required: false
+      approver: "BA_TEAM"
+      assessment_required: true
+      notes: "BA precheck team can assess whether this is a benign violation, and if so, can grant waiver/exception accordingly"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "ba_team_assessment_required"
+      escalation_required: false
+      approver: "BA_TEAM"
+      assessment_required: true
+      notes: "BA precheck team can assess whether this is a benign violation, and if so, can grant waiver/exception accordingly"
+      auto_decision: "manual_review"
+
+  ReleaseNotesChk:
+    intel:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny  & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny  & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+
+  SCAScanChk:
+    intel:
+      auto_approve: false
+      condition: "PSXT validation required"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny", "Kar, Rajdeep"]
+      approver: "ESCALATION"
+      validation_required: "PSXT"
+      notes: "CQN/SDLe-driven, must validate with PSXT that subsequent ingredient submission will rectify this"
+      auto_decision: "escalate"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  SignChk:
+    intel:
+      auto_approve: false
+      condition: "escalation_required_no_waiver"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "ESCALATION"
+      notes: "Sign Check - Escalation to Lonny  & Rajdeep required"
+      auto_decision: "escalate"
+    tpv:
+      auto_approve: false
+      condition: "escalation_required_no_waiver"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "ESCALATION"
+      notes: "Sign Check - Escalation to Lonny & Rajdeep required"
+      auto_decision: "escalate"
+
+  SymChk:
+    intel:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "blanket_modulation_exception"
+      escalation_required: false
+      approver: "SYSTEM"
+      notes: "Not required, blanket Modulation Exception for all TPV ingredients"
+      auto_decision: "approve"
+
+  SymPublicChk:
+    intel:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny  & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+
+  VersionChk:
+    intel:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+    tpv:
+      auto_approve: true
+      condition: "2week_waiver_with_escalation"
+      escalation_required: true
+      escalation_to: ["Mcmichael, Lonny"]
+      escalation_to: ["Kar, Rajdeep"]
+      approver: "BA_TEAM_WITH_ESCALATION"
+      waiver_duration_days: 14
+      notes: "BA team can grant 2-week waiver but issue must also be escalated to Lonny & Rajdeep for review/resolution"
+      auto_decision: "manual_review"
+
+# Enhanced AI Learning Configuration
+ai_learning:
+  confidence_threshold: 0.8
+  pattern_learning_enabled: true
+  historical_analysis_enabled: true
+  auto_approval_confidence_threshold: 0.9
+  false_positive_indicators:
+    - "precheck bug"
+    - "false positive"
+    - "tool error"
+    - "configuration issue"
+    - "platform setup"
+    - "false-positive"
+    - "precheck issue"
+  learning_features:
+    - "ingredient_type_patterns"
+    - "milestone_dependencies"
+    - "escalation_success_rates"
+    - "waiver_duration_effectiveness"
+
+# Enhanced Integration Settings
+integration:
+  webhook_endpoint: "/api/precheck_failure"
+  notification_endpoints:
+    ba_team: "http://localhost:8000/api/notify_ba_team"
+    escalation: "http://localhost:8000/api/escalate_precheck"
+    lonny_escalation: "http://localhost:8000/api/escalate_lonny"
+    rajdeep_escalation: "http://localhost:8000/api/escalate_rajdeep"
+    balu_escalation: "http://localhost:8000/api/escalate_balu"
+
+  # Escalation contact mapping
+  escalation_contacts:
+    "Mcmichael, Lonny": "lonny.mcmichael@company.com"
+    "Kar, Rajdeep": "rajdeep.kar@intel.com"
+    "Balu": "balasubramanyam.agalukote.lakshmipathi@intel.com"
+
+# Enhanced Milestone Configuration
+milestones:
+  pre_alpha: ["planning", "development", "initial_testing", "dev", "test", "staging", "pre_alpha"]
+  alpha: ["alpha_testing", "alpha_release", "alpha"]
+  post_alpha: ["beta", "rc", "rc1", "rc2", "rtm", "production", "release", "candidate", "preview"]
+
+# Decision Matrix Summary (for quick reference)
+decision_matrix:
+  auto_approve_cases:
+    - "TPV ingredients with blanket exceptions (BATChk, BinaryScanChk, IPScanChk, SCAScanChk, SDLeChk, SymChk)"
+    - "Non-mandatory checks (InfWCOSChk, IngUWDApiChk)"
+    - "False-positive violations (overriding principle)"
+    - "WSE-driven BATChk requests"
+    - "Benign PathLengthChk violations"
+
+  auto_reject_cases:
+    - "DriverChk without INF files (Intel/TPV)"
+    - "InfHSAChk violations (Intel/TPV)"
+    - "SDLeChk post-Alpha milestone (Intel only)"
+    - "MsftSignChk and SignChk violations requiring escalation"
+
+  manual_review_cases:
+    - "Intel IP violations requiring PSXT validation"
+    - "Time-sensitive waivers (2-week limits)"
+    - "Assessment-required violations (PathLengthChk)"
+    - "Pre-Alpha milestone dependencies"
+
+# Validation Rules
+validation_requirements:
+  PSXT:
+    description: "Platform Security eXecution Team validation required"
+    applies_to: ["BinaryScanChk", "IPScanChk", "SCAScanChk"]
+    requirement: "Must validate that subsequent ingredient submission will rectify before milestone exit"
+
+  BA_ASSESSMENT:
+    description: "BA team assessment for benign violations"
+    applies_to: ["PathLengthChk"]
+    requirement: "BA team must assess whether violation is benign before granting waiver"
+
+# Audit and Compliance
+audit_settings:
+  log_all_decisions: true
+  track_escalations: true
+  monitor_waiver_durations: true
+  compliance_reporting: true
+  decision_reasoning_required: true

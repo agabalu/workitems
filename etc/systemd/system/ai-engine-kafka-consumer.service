@@ -1,0 +1,21 @@
+[Unit]
+Description=AI Engine Kafka Alert Consumer
+After=network.target kafka.service
+Wants=kafka.service
+Requires=kafka.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/aiengine/src/aiengine
+Environment=PYTHONPATH=/aiengine/src/aiengine
+ExecStart=/usr/bin/python3 /aiengine/src/aiengine/kafka_consumer.py
+Restart=always
+RestartSec=15
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-kafka-consumer
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+{
+  "retry_config": {
+    "max_retries": 5,
+    "retry_delay_seconds": 10
+  },
+  "webhook": {
+    "url": "https://your-webhook-url.com/alert",
+    "enabled": true
+  },
+  "environments": [
+    {
+      "name": "<< environment name here >>",
+      "tenant_id": "<< Tenant id here  >>",
+      "openapi_client_id": "<< openapi client id here  >>",
+      "app_client_id": "<< app client id here >>",
+      "group_id": "<< group id here >>",
+      "client_secret_env": "<< client secret >>",
+      "api_urls": [
+        {
+          "name": "<< notification service here >>",
+          "url": "<< notification service url here >>"
+        }
+      ]
+    }
+  ]
+}

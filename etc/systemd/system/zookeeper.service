@@ -1,0 +1,21 @@
+
+[Unit]
+Description=Apache Zookeeper server
+Documentation=http://zookeeper.apache.org
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=kafka
+Group=kafka
+Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+Environment=KAFKA_HEAP_OPTS="-Xmx512M -Xms512M"
+ExecStart=/aiengine/src/aiengine/kafka/bin/zookeeper-server-start.sh /etc/kafka/zookeeper.properties
+ExecStop=/aiengine/src/aiengine/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+RestartSec=10
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,34 +1,53 @@
-Intel Universal Neural Network System
-🌟 Overview
-The Intel Universal Neural Network System is a world-class, enterprise-grade AI platform capable of handling any domain and task type through advanced neural architectures, meta-learning, and domain adaptation. This system combines deep learning, traditional machine learning, and explainable AI to provide comprehensive solutions across multiple domains.
-🚀 Key Features
-🧠 Universal AI Capabilities
-Multi-Domain Support: Infrastructure, Finance, Healthcare, Natural Language, Computer Vision, Manufacturing, DevOps, and more
-Adaptive Neural Architecture: Dynamically adapts to different domains and task types
-Meta-Learning: Transfers knowledge across domains for improved performance
-Continual Learning: Self-improving system that learns from every task
-🔍 Advanced AI Technologies
-PyTorch Neural Networks with Multi-head Attention and Transformer Encoders
-Explainable AI with SHAP and LIME integration
-Domain-Specific Heads for specialized processing
-Uncertainty Analysis and confidence scoring
-Feature Importance analysis and counterfactual explanations
-🛡️ Enterprise Features
-PostgreSQL Database integration with comprehensive task tracking
-Azure OpenAI integration for enhanced language processing
-Wiki Knowledge Base with intelligent Q&A capabilities
-Precheck System for deployment validation and risk assessment
-Comprehensive Monitoring with Prometheus and Grafana integration
-🔧 Integration & Monitoring
-RESTful API for easy integration
-Real-time Metrics and performance monitoring
-GitHub Integration for repository monitoring
-Alert Management with Prometheus AlertManager
-Security Features with encryption and audit logging
-📋 Prerequisites
-System Requirements
-Python 3.8+
-PostgreSQL 12+
-4GB+ RAM (8GB+ recommended)
-2GB+ Disk Space
-Network Access (for external integrations)
+# Intel Universal Neural Network System
+
+## 🌟 Overview
+
+The **Intel Universal Neural Network System** is a world-class, domain-agnostic AI system capable of handling any type of task across multiple domains. It combines deep learning, transfer learning, meta-learning, and continual learning to provide a comprehensive AI solution for enterprise environments.
+
+## 🚀 Key Features
+
+### 🧠 Universal AI Capabilities
+- **Multi-Domain Support**: Infrastructure, Finance, Healthcare, Natural Language, Computer Vision, Manufacturing, and more
+- **Adaptive Neural Architecture**: Dynamically adapts to different domains and task types
+- **Meta-Learning**: Learns how to learn across domains for improved performance
+- **Continual Learning**: Self-improving system that gets better over time
+
+### 🔍 Explainable AI
+- **SHAP Integration**: SHapley Additive exPlanations for model interpretability
+- **LIME Support**: Local Interpretable Model-agnostic Explanations
+- **Attention Visualization**: Visual representation of model attention weights
+- **Decision Path Tracking**: Complete audit trail of AI decision-making process
+
+### 🏗️ Enterprise Integration
+- **PostgreSQL Database**: Robust data persistence and analytics
+- **Prometheus Monitoring**: Comprehensive metrics and alerting
+- **Grafana Dashboards**: Real-time system visualization
+- **Azure OpenAI Integration**: Enhanced capabilities with external LLMs
+- **RESTful API**: Easy integration with existing systems
+
+### 🛡️ Security & Compliance
+- **Precheck Validation**: Automated compliance and risk assessment
+- **Encryption Support**: Data protection at rest and in transit
+- **Audit Logging**: Complete activity tracking
+- **Role-based Access**: Secure multi-user environment
+
+## 📋 System Requirements
+
+### Minimum Requirements
+- **OS**: Ubuntu 20.04+ / CentOS 8+ / RHEL 8+
+- **Python**: 3.8+
+- **RAM**: 8GB minimum, 16GB recommended
+- **Storage**: 20GB available space
+- **CPU**: 4 cores minimum, 8 cores recommended
+
+### Recommended Requirements
+- **RAM**: 32GB+ for large-scale deployments
+- **GPU**: NVIDIA GPU with CUDA support (optional but recommended)
+- **Storage**: SSD with 100GB+ for optimal performance
+
+## 🔧 Installation
+
+### 1. Clone Repository
+```bash
+git clone <repository-url>
+cd aiengine/src/aiengine

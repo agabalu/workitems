@@ -27,12 +27,12 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# PIL Compatibility Fix for Transformers
+ PIL Compatibility Fix for Transformers
 try:
     from PIL import Image
     import PIL
 
-    # Fix PIL.Image.Resampling compatibility for older Pillow versions
+     Fix PIL.Image.Resampling compatibility for older Pillow versions
     if not hasattr(Image, 'Resampling'):
         class Resampling:
             NEAREST = getattr(Image, 'NEAREST', 0)
@@ -44,7 +44,7 @@ try:
 
         Image.Resampling = Resampling
 
-        # Also patch PIL.Image if accessible
+         Also patch PIL.Image if accessible
         try:
             PIL.Image.Resampling = Resampling
         except:
@@ -54,7 +54,7 @@ try:
 
 except ImportError as e:
     print(f"⚠️ PIL not available: {e}")
-    # Create minimal mock for transformers compatibility
+     Create minimal mock for transformers compatibility
     class MockImage:
         class Resampling:
             NEAREST = 0
@@ -69,7 +69,7 @@ except ImportError as e:
 try:
     from dotenv import load_dotenv
 
-    # Load .env file as single source of truth
+     Load .env file as single source of truth
     env_loaded = load_dotenv('/aiengine/src/aiengine/.env')
 
     if env_loaded:
@@ -87,7 +87,7 @@ except ImportError:
     print("   Install with: pip install python-dotenv")
     print("   Using system environment variables only")
 
-# Validate critical PostgreSQL configuration
+ Validate critical PostgreSQL configuration
 def validate_postgres_config():
     """Validate PostgreSQL configuration from .env"""
     required_vars = ['POSTGRES_HOST', 'POSTGRES_PORT', 'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD']
@@ -101,7 +101,7 @@ def validate_postgres_config():
         print("✅ PostgreSQL configuration complete")
         return True
 
-# Validate configuration on startup
+ Validate configuration on startup
 postgres_config_valid = validate_postgres_config()
 
 
@@ -145,7 +145,7 @@ except ImportError:
     VISUALIZATION_AVAILABLE = False
     print("⚠️ Visualization libraries not available")
 
-# For attention visualization
+ For attention visualization
 try:
     import plotly.graph_objects as go
     import plotly.express as px
@@ -154,10 +154,10 @@ try:
 except ImportError:
     PLOTLY_AVAILABLE = False
 
-# Add project root to path
+ Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Prometheus integration with delayed import to avoid circular dependency
+ Prometheus integration with delayed import to avoid circular dependency
 PROMETHEUS_INTEGRATION_AVAILABLE = False
 
 
@@ -181,7 +181,7 @@ def initialize_prometheus_integration():
         print(f"⚠️ Prometheus integration not available: {e}")
         return None
 
-# Import utilities from shared module to avoid circular imports
+ Import utilities from shared module to avoid circular imports
 try:
     from config.ai_utils import (
         safe_json_serialize,
@@ -197,12 +197,12 @@ try:
         parse_port_config
     )
     AI_UTILITIES_AVAILABLE = True
-    print("✅ AI utility functions imported successfully")  # Use print instead of logger
+    print("✅ AI utility functions imported successfully")   Use print instead of logger
 except ImportError as e:
     AI_UTILITIES_AVAILABLE = False
-    print(f"⚠️ AI utils not available: {e}")  # Use print instead of logger
+    print(f"⚠️ AI utils not available: {e}")   Use print instead of logger
 
-    # Minimal fallbacks
+     Minimal fallbacks
     def safe_json_serialize(obj):
         return obj
 
@@ -215,19 +215,19 @@ except ImportError as e:
     def convert_deque_to_list(obj):
         return obj
 
-    # Add memory cleanup in the main loop
+     Add memory cleanup in the main loop
     def cleanup_memory_periodically(self):
         """Periodic memory cleanup to prevent leaks"""
         if hasattr(self, '_projection_cache'):
-            if len(self._projection_cache) > 100:  # Limit cache size
-                # Keep only most recently used projections
+            if len(self._projection_cache) > 100:   Limit cache size
+                 Keep only most recently used projections
                 recent_keys = list(self._projection_cache.keys())[-50:]
                 self._projection_cache = {k: self._projection_cache[k] for k in recent_keys}
 
-        # Force garbage collection
+         Force garbage collection
         gc.collect()
 
-        # Clear completed tasks older than 1 hour
+         Clear completed tasks older than 1 hour
         current_time = time.time()
         old_tasks = [
             task_id for task_id, data in self.completed_tasks.items()
@@ -257,7 +257,7 @@ except ImportError as e:
     def health_check():
         return {'status': 'unknown'}
 
-    # Modular System Imports - Enhanced domain and task management
+     Modular System Imports - Enhanced domain and task management
     try:
         from core.domains.domain_registry import (
             get_domain_config,
@@ -295,15 +295,15 @@ class PrecheckManager:
 
     def _initialize(self):
         try:
-            # Import and create the precheck engine directly
+             Import and create the precheck engine directly
             from core.precheck_engine import PrecheckEngine
             self.engine = PrecheckEngine()
 
 
-            # Create a simple processor wrapper
+             Create a simple processor wrapper
             self.processor = PrecheckProcessorWrapper(self.engine)
 
-            print("✅ Precheck manager with engine initialized")  # Use print instead of logger
+            print("✅ Precheck manager with engine initialized")   Use print instead of logger
         except ImportError as e:
             print(f"❌ Precheck engine import failed: {e}")
         except Exception as e:
@@ -319,7 +319,7 @@ class PrecheckManager:
         return self.engine is not None
 
 
-# Create a fallback PrecheckEngine
+ Create a fallback PrecheckEngine
 class FallbackPrecheckEngine:
     def __init__(self):
         self.available = False
@@ -356,7 +356,7 @@ class PrecheckProcessorWrapper:
         if hasattr(self.precheck_engine, 'process_sync'):
             return self.precheck_engine.process_sync(task)
         else:
-            # Fallback to ai_analyze_failure
+             Fallback to ai_analyze_failure
             return self.precheck_engine.ai_analyze_failure(task.input_data)
 
     def get_health_status(self):
@@ -368,7 +368,6 @@ class PrecheckProcessorWrapper:
                 'status': 'healthy',
                 'last_check': time.time()
             }
-
 
 # ============================================================================
 # INITIALIZE GLOBAL PRECHECK MANAGER
@@ -392,11 +391,6 @@ except Exception as e:
             return True
     precheck_manager = MinimalPrecheckManager()
     print("✅ Fallback precheck manager created")
-
-        # Initialize global precheck manager
-   #     precheck_manager = PrecheckManager()
-   #     MODULAR_SYSTEM_AVAILABLE = precheck_manager.is_available()
-
 
     # Fallback: Define minimal compatibility functions
     def get_domain_feature_weight(domain, feature_name):
@@ -470,8 +464,6 @@ except ImportError:
     SKLEARN_AVAILABLE = False
 
 # Utility Functions
-
-
 # Configuration and port management
 try:
     from config.port_registry import port_registry
@@ -559,14 +551,11 @@ class UniversalSolution:
         if self.uncertainty_analysis is None:
             self.uncertainty_analysis = {}
 
-
-
-
 class UniversalDatabase:
     """Enhanced database integration supporting multiple backends"""
 
     def __init__(self, db_type="auto", connection_string=None):
-        # Get database configuration from .env
+        # Get database configuration from .env -- need to remove hardcoding of the db name later ....
         self.db_type = db_type if db_type != "auto" else os.getenv('DB_TYPE', 'auto')
         self.connection_string = connection_string or os.getenv('DB_CONNECTION_STRING', os.getenv('DB_NAME', 'universal_ai_prod'))
         self.lock = threading.Lock()
@@ -1423,19 +1412,6 @@ class UniversalDatabase:
             logger.error(f"Failed to export tasks to CSV: {e}")
             return False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 class UniversalNeuralArchitecture(nn.Module if PYTORCH_AVAILABLE else object):
     """Universal Neural Network Architecture that adapts to any domain"""
 
@@ -2076,8 +2052,7 @@ class DomainAdapter:
         elif task.task_type in [TaskType.TEXT_GENERATION, TaskType.CODE_GENERATION]:
             steps.extend(['decode', 'format_output'])
 
-
-        # Add format_output for precheck validation tasks
+        #  format_output for precheck validation tasks
         if task.domain == DomainType.PRECHECK_VALIDATION:
             steps.append('format_output')
         elif task.domain in [DomainType.INFRASTRUCTURE, DomainType.FINANCE, DomainType.HEALTHCARE]:
@@ -2704,31 +2679,31 @@ class ExplainableAIEngine:
     def _analyze_uncertainty(self, task: UniversalTask, solution: UniversalSolution, model: UniversalNeuralArchitecture) -> Dict[str, float]:
         """Analyze prediction uncertainty"""
         uncertainty_metrics = {
-            'epistemic_uncertainty': 0.0,  # Model uncertainty
-            'aleatoric_uncertainty': 0.0,  # Data uncertainty
+            'epistemic_uncertainty': 0.0,   Model uncertainty
+            'aleatoric_uncertainty': 0.0,   Data uncertainty
             'total_uncertainty': 0.0,
             'confidence_interval_lower': 0.0,
             'confidence_interval_upper': 0.0
         }
 
         try:
-            # Simplified uncertainty estimation
+             Simplified uncertainty estimation
             base_uncertainty = 1.0 - solution.confidence
 
-            # Epistemic uncertainty (model knowledge)
+             Epistemic uncertainty (model knowledge)
             uncertainty_metrics['epistemic_uncertainty'] = base_uncertainty * 0.6
 
-            # Aleatoric uncertainty (data noise)
+             Aleatoric uncertainty (data noise)
             data_noise = self._estimate_data_noise(task.input_data)
             uncertainty_metrics['aleatoric_uncertainty'] = data_noise * 0.4
 
-            # Total uncertainty
+             Total uncertainty
             uncertainty_metrics['total_uncertainty'] = (
                 uncertainty_metrics['epistemic_uncertainty'] +
                 uncertainty_metrics['aleatoric_uncertainty']
             )
 
-            # Confidence intervals (simplified)
+             Confidence intervals (simplified)
             if isinstance(solution.solution, (int, float)):
                 margin = uncertainty_metrics['total_uncertainty'] * abs(solution.solution)
                 uncertainty_metrics['confidence_interval_lower'] = solution.solution - margin
@@ -2752,7 +2727,7 @@ class ExplainableAIEngine:
         except:
             pass
 
-        return 0.1  # Default low noise
+        return 0.1   Default low noise
 
     def _generate_domain_specific_explanation(self, task: UniversalTask, solution: UniversalSolution) -> Dict[str, Any]:
         """Generate domain-specific explanations"""
@@ -2784,7 +2759,7 @@ class ExplainableAIEngine:
         }
 
         if isinstance(task.input_data, dict):
-            # Analyze infrastructure metrics
+             Analyze infrastructure metrics
             if 'cpu_usage' in task.input_data:
                 cpu_data = task.input_data['cpu_usage']
                 if isinstance(cpu_data, list):
@@ -2805,7 +2780,7 @@ class ExplainableAIEngine:
                         'warning' if avg_memory > 0.7 else 'normal'
                     )
 
-        # Generate recommendations based on solution
+         Generate recommendations based on solution
         if isinstance(solution.solution, dict) and 'recommended_action' in solution.solution:
             action = solution.solution['recommended_action']
             explanation['recommended_actions'].append({
@@ -2826,7 +2801,7 @@ class ExplainableAIEngine:
             'regulatory_considerations': []
         }
 
-        # Analyze financial data patterns
+         Analyze financial data patterns
         if isinstance(task.input_data, list) and all(isinstance(x, (int, float)) for x in task.input_data):
             price_data = task.input_data
             if len(price_data) > 1:
@@ -2853,7 +2828,7 @@ class ExplainableAIEngine:
         }
 
         if isinstance(task.input_data, dict):
-            # Analyze vital signs
+             Analyze vital signs
             if 'vital_signs' in task.input_data:
                 vitals = task.input_data['vital_signs']
                 if isinstance(vitals, dict):
@@ -2868,7 +2843,7 @@ class ExplainableAIEngine:
                                 'normal_range': normal_range
                             })
 
-            # Analyze symptoms
+             Analyze symptoms
             if 'symptoms' in task.input_data:
                 symptoms = task.input_data['symptoms']
                 if isinstance(symptoms, list):
@@ -2912,25 +2887,25 @@ class ExplainableAIEngine:
         if isinstance(task.input_data, str):
             text = task.input_data
 
-            # Basic text analysis
+             Basic text analysis
             explanation['text_analysis'] = {
                 'word_count': len(text.split()),
                 'character_count': len(text),
                 'sentence_count': text.count('.') + text.count('!') + text.count('?')
             }
 
-            # Identify key phrases (simplified)
+             Identify key phrases (simplified)
             words = text.lower().split()
             word_freq = {}
             for word in words:
-                if len(word) > 3:  # Skip short words
+                if len(word) > 3:   Skip short words
                     word_freq[word] = word_freq.get(word, 0) + 1
 
-            # Get most frequent meaningful words
+             Get most frequent meaningful words
             sorted_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
             explanation['key_phrases'] = [word for word, freq in sorted_words[:5]]
 
-            # Simple sentiment indicators
+             Simple sentiment indicators
             positive_words = ['good', 'great', 'excellent', 'amazing', 'love', 'fantastic', 'wonderful']
             negative_words = ['bad', 'terrible', 'awful', 'hate', 'horrible', 'disappointing']
 
@@ -2950,10 +2925,10 @@ class ExplainableAIEngine:
         try:
             summary_parts = []
 
-            # Basic decision summary
+             Basic decision summary
             summary_parts.append(f"For this {task.domain.value} {task.task_type.value} task, ")
 
-            # Confidence statement
+             Confidence statement
             confidence_level = (
                 "high confidence" if solution.confidence > 0.8 else
                 "moderate confidence" if solution.confidence > 0.6 else
@@ -2961,13 +2936,13 @@ class ExplainableAIEngine:
             )
             summary_parts.append(f"the system reached a decision with {confidence_level} (score: {solution.confidence:.2f}). ")
 
-            # Key factors
+             Key factors
             decision_factors = explanation.get('decision_factors', [])
             if decision_factors:
                 top_factor = decision_factors[0]
                 summary_parts.append(f"The most influential factor was {top_factor['description']}. ")
 
-            # Domain-specific insights
+             Domain-specific insights
             if task.domain == DomainType.INFRASTRUCTURE:
                 summary_parts.append("The analysis considered system performance metrics and resource utilization patterns. ")
             elif task.domain == DomainType.FINANCE:
@@ -2975,12 +2950,12 @@ class ExplainableAIEngine:
             elif task.domain == DomainType.HEALTHCARE:
                 summary_parts.append("The assessment evaluated clinical indicators and medical risk factors. ")
 
-            # Uncertainty mention
+             Uncertainty mention
             uncertainty = explanation.get('uncertainty_metrics', {}).get('total_uncertainty', 0)
             if uncertainty > 0.3:
                 summary_parts.append(f"Note: There is some uncertainty in this prediction (uncertainty score: {uncertainty:.2f}). ")
 
-            # Recommendation
+             Recommendation
             if solution.confidence > 0.7:
                 summary_parts.append("This recommendation can be acted upon with confidence.")
             else:
@@ -3015,7 +2990,7 @@ class ExplainableAIEngine:
         }
 
         try:
-            # Add processing pipeline details
+             Add processing pipeline details
             technical_details['processing_pipeline'] = [
                 'Input data validation and preprocessing',
                 'Domain-specific feature extraction',
@@ -3025,7 +3000,7 @@ class ExplainableAIEngine:
                 'Confidence calculation and calibration'
             ]
 
-            # Mathematical details
+             Mathematical details
             if isinstance(model_output, dict) and 'probabilities' in model_output:
                 probs = model_output['probabilities']
                 if probs:
@@ -3033,7 +3008,7 @@ class ExplainableAIEngine:
                     technical_details['mathematical_details']['max_probability'] = max(probs)
                     technical_details['mathematical_details']['probability_distribution'] = probs
 
-            # Data preprocessing details
+             Data preprocessing details
             technical_details['data_preprocessing'] = {
                 'input_type': type(task.input_data).__name__,
                 'preprocessing_applied': ['normalization', 'feature_extraction'],
@@ -3066,7 +3041,7 @@ class ExplainableAIEngine:
         visualizations = {}
 
         try:
-            # Feature importance visualization
+             Feature importance visualization
             feature_importance = explanation.get('feature_importance', {})
             if feature_importance:
                 visualizations['feature_importance'] = {
@@ -3076,7 +3051,7 @@ class ExplainableAIEngine:
                     'description': 'Relative importance of input features in the decision'
                 }
 
-            # Confidence breakdown visualization
+             Confidence breakdown visualization
             confidence_breakdown = explanation.get('confidence_breakdown', {})
             if confidence_breakdown:
                 visualizations['confidence_breakdown'] = {
@@ -3086,7 +3061,7 @@ class ExplainableAIEngine:
                     'description': 'Components contributing to the overall confidence score'
                 }
 
-            # Attention weights visualization (if available)
+             Attention weights visualization (if available)
             attention_analysis = explanation.get('attention_analysis', {})
             if attention_analysis.get('attention_available') and attention_analysis.get('attention_patterns'):
                 visualizations['attention_weights'] = {
@@ -3096,7 +3071,7 @@ class ExplainableAIEngine:
                     'description': 'Model attention focus across input elements'
                 }
 
-            # Uncertainty visualization
+             Uncertainty visualization
             uncertainty_metrics = explanation.get('uncertainty_metrics', {})
             if uncertainty_metrics:
                 visualizations['uncertainty_analysis'] = {
@@ -3115,7 +3090,7 @@ class ExplainableAIEngine:
         """Assess quality of input data"""
         try:
             if isinstance(input_data, dict):
-                # Check for missing values, data types, etc.
+                 Check for missing values, data types, etc.
                 total_fields = len(input_data)
                 valid_fields = sum(1 for v in input_data.values() if v is not None and v != "")
                 return valid_fields / total_fields if total_fields > 0 else 0.5
@@ -3123,22 +3098,22 @@ class ExplainableAIEngine:
             elif isinstance(input_data, list):
                 if not input_data:
                     return 0.1
-                # Check for consistency and completeness
+                 Check for consistency and completeness
                 non_null_count = sum(1 for x in input_data if x is not None)
                 return non_null_count / len(input_data)
 
             elif isinstance(input_data, str):
-                # Basic text quality assessment
+                 Basic text quality assessment
                 if len(input_data.strip()) == 0:
                     return 0.1
                 word_count = len(input_data.split())
-                return min(word_count / 10, 1.0)  # Normalize by expected word count
+                return min(word_count / 10, 1.0)   Normalize by expected word count
 
             else:
-                return 0.7  # Default for other types
+                return 0.7   Default for other types
 
         except Exception:
-            return 0.5  # Default quality score
+            return 0.5   Default quality score
 
     def _calculate_prediction_uncertainty(self, model_output: Any) -> float:
         """Calculate prediction uncertainty from model output"""
@@ -3146,15 +3121,15 @@ class ExplainableAIEngine:
             if isinstance(model_output, dict) and 'probabilities' in model_output:
                 probs = model_output['probabilities']
                 if probs and isinstance(probs, list):
-                    # Calculate entropy as uncertainty measure
+                     Calculate entropy as uncertainty measure
                     entropy = -sum(p * np.log(p + 1e-10) for p in probs if p > 0)
-                    max_entropy = np.log(len(probs))  # Maximum possible entropy
+                    max_entropy = np.log(len(probs))   Maximum possible entropy
                     return entropy / max_entropy if max_entropy > 0 else 0.5
 
-            return 0.3  # Default uncertainty
+            return 0.3   Default uncertainty
 
         except Exception:
-            return 0.5  # Default uncertainty on error
+            return 0.5   Default uncertainty on error
 
 class WorldClassUniversalNeuralSystem:
     """World-class universal neural network system that can handle any domain"""
@@ -3165,7 +3140,7 @@ class WorldClassUniversalNeuralSystem:
 
         logger.info("🔧 Initializing core components...")
 
-        # Core components
+         Core components
         logger.debug("🔧 Creating neural architecture...")
         self.neural_architecture = UniversalNeuralArchitecture()
         logger.debug("✅ Neural architecture created")
@@ -3178,14 +3153,14 @@ class WorldClassUniversalNeuralSystem:
         self.learning_engine = UniversalLearningEngine()
         logger.debug("✅ Learning engine created")
 
-        # Task management
+         Task management
         logger.debug("🔧 Initializing task management...")
         self.active_tasks = {}
         self.completed_tasks = {}
         self.task_queue = asyncio.Queue() if hasattr(asyncio, 'Queue') else []
         logger.debug("✅ Task management initialized")
 
-        # Performance tracking
+         Performance tracking
         logger.debug("🔧 Initializing performance tracking...")
         self.performance_metrics = {
             'total_tasks_processed': 0,
@@ -3197,16 +3172,16 @@ class WorldClassUniversalNeuralSystem:
         }
         logger.debug("✅ Performance tracking initialized")
 
-        # Knowledge base
+         Knowledge base
         logger.debug("🔧 Initializing knowledge base...")
         self.universal_knowledge_base = {}
         self.domain_expertise_levels = {}
 
-        # Model management
+         Model management
         self.model_versions = {}
         self.best_models_per_domain = {}
 
-        # Initialize domain expertise tracking
+         Initialize domain expertise tracking
         for domain in DomainType:
             self.domain_expertise_levels[domain.value] = 0.0
         logger.debug("✅ Knowledge base initialized")
@@ -3218,13 +3193,13 @@ class WorldClassUniversalNeuralSystem:
         logger.info(f"🔧 Transformers Available: {TRANSFORMERS_AVAILABLE}")
         logger.info(f"🔧 Scikit-learn Available: {SKLEARN_AVAILABLE}")
 
-        # Add database integration
+         Add database integration
         logger.debug("🔧 Initializing database...")
         try:
             self.database = UniversalDatabase()
             logger.info("✅ Database integration initialized")
 
-            # Test database connection
+             Test database connection
             if self.database.test_connection():
                 logger.info(f"✅ Database connection verified: {self.database.db_type}")
                 task_count = self.database.get_task_count()
@@ -3245,7 +3220,7 @@ class WorldClassUniversalNeuralSystem:
             self.precheck_manager = precheck_manager
             self.precheck_processor = precheck_manager.get_processor()
 
-            # Integrate the precheck engine with this universal system
+             Integrate the precheck engine with this universal system
             if (self.precheck_processor and
                 hasattr(self.precheck_processor, 'precheck_engine') and
                 hasattr(self.precheck_processor.precheck_engine, 'integrate_with_universal_system')):
@@ -3264,27 +3239,27 @@ class WorldClassUniversalNeuralSystem:
 
         logger.info("✅ All components initialized successfully")
 
-        # ADD THIS SECTION HERE - PROPERLY INDENTED INSIDE THE __init__ METHOD
-        # Initialize Wiki Knowledge Base
-        # logger.debug("🔧 Initializing Wiki Knowledge Base...")
-        # try:
-        #    from core.wiki_qa import WikiKnowledgeBase
-        #    self.wiki_kb = WikiKnowledgeBase()
-        #    if self.wiki_kb.initialized:
-        #        logger.info("✅ Wiki Knowledge Base integrated successfully")
-        #        # Add to performance metrics
-        #        self.performance_metrics['wiki_questions_processed'] = 0
-        #    else:
-        #        logger.warning("⚠️ Wiki Knowledge Base not available - continuing without wiki support")
-        #        self.wiki_kb = None
-        # except Exception as e:
-        #    logger.error(f"❌ Failed to initialize Wiki Knowledge Base: {e}")
-        #    self.wiki_kb = None
+         ADD THIS SECTION HERE - PROPERLY INDENTED INSIDE THE __init__ METHOD
+         Initialize Wiki Knowledge Base
+         logger.debug("🔧 Initializing Wiki Knowledge Base...")
+         try:
+            from core.wiki_qa import WikiKnowledgeBase
+            self.wiki_kb = WikiKnowledgeBase()
+            if self.wiki_kb.initialized:
+                logger.info("✅ Wiki Knowledge Base integrated successfully")
+                 Add to performance metrics
+                self.performance_metrics['wiki_questions_processed'] = 0
+            else:
+                logger.warning("⚠️ Wiki Knowledge Base not available - continuing without wiki support")
+                self.wiki_kb = None
+         except Exception as e:
+            logger.error(f"❌ Failed to initialize Wiki Knowledge Base: {e}")
+            self.wiki_kb = None
 
-        # Initialize Wiki Knowledge Base - ENHANCED WITH NEURAL INTEGRATION
+         Initialize Wiki Knowledge Base - ENHANCED WITH NEURAL INTEGRATION
         logger.debug("🔧 Initializing Wiki Knowledge Base with Neural Integration...")
         try:
-            # Pass the universal system to enable neural fallback
+             Pass the universal system to enable neural fallback
             self.wiki_kb = WikiKnowledgeBase(universal_system=self)
 
             if hasattr(self.wiki_kb, 'initialized') and self.wiki_kb.initialized:
@@ -3292,11 +3267,11 @@ class WorldClassUniversalNeuralSystem:
                 logger.info(f"📚 Wiki pages loaded: {len(self.wiki_kb.pages)}")
                 logger.info("🧠 Neural fallback enabled for enhanced AI responses")
 
-                # Add to performance metrics
+                 Add to performance metrics
                 if 'wiki_questions_processed' not in self.performance_metrics:
                     self.performance_metrics['wiki_questions_processed'] = 0
 
-                # Log some sample pages
+                 Log some sample pages
                 if self.wiki_kb.pages:
                     sample_pages = list(self.wiki_kb.pages.items())[:3]
                     for page_id, page_data in sample_pages:
@@ -3313,23 +3288,12 @@ class WorldClassUniversalNeuralSystem:
             logger.info(f"   Error details: {str(e)}")
             self.wiki_kb = None
 
-
-    # Initialize Wiki Knowledge Base
-    # try:
-    #    self.wiki_kb = WikiKnowledgeBase()
-    #    if self.wiki_kb.initialized:
-    #        logger.info("✅ Wiki Knowledge Base integrated successfully")
-    #    else:
-    #        logger.warning("⚠️ Wiki Knowledge Base not available")
-    #        self.wiki_kb = None
-    #except Exception as e:
-    #    logger.error(f"❌ Failed to initialize Wiki Knowledge Base: {e}")
-    #    self.wiki_kb = None
-
-
-    # Add this method to handle wiki questions
+     # Initialize Wiki Knowledge Base
+     try:
+        self.wiki_kb = WikiKnowledgeBase()
+        if self.wiki_kb.initialized:
+   
     async def process_wiki_question(self, question: str, max_tokens: int = 1000, include_sources: bool = True) -> Dict:
-    # def process_wiki_question(self, question: str, max_tokens: int = 1000, include_sources: bool = True) -> Dict:
         """Process a wiki-based question"""
         if not self.wiki_kb or not self.wiki_kb.initialized:
             return {
@@ -3368,7 +3332,6 @@ class WorldClassUniversalNeuralSystem:
                 "answer": f"Error processing question: {str(e)}",
                 "timestamp": datetime.now().isoformat()
             }
-
 
     def process_precheck_task_sync(self, task: UniversalTask) -> UniversalSolution:
         """Improved synchronous precheck task processing"""
@@ -3411,8 +3374,6 @@ class WorldClassUniversalNeuralSystem:
                 execution_time=execution_time,
                 model_used="error_handler"
             )
-
-
 
     def _fallback_precheck_processing(self, task: UniversalTask, start_time: float) -> UniversalSolution:
         """Enhanced fallback using existing precheck engine"""
@@ -3469,7 +3430,6 @@ class WorldClassUniversalNeuralSystem:
             metadata=task.metadata
         )
 
-
     def cleanup_resources(self):
         """Clean up system resources periodically"""
         try:
@@ -3515,7 +3475,6 @@ class WorldClassUniversalNeuralSystem:
         except Exception as e:
             logger.error(f"Resource cleanup failed: {e}")
 
-    #async def process_universal_task(self, task: UniversalTask) -> UniversalSolution:
     def process_universal_task(self, task: UniversalTask) -> UniversalSolution:
         """Process any universal task and provide a solution"""
         start_time = time.time()
@@ -4076,34 +4035,6 @@ class WorldClassUniversalNeuralSystem:
         except Exception as e:
             logger.warning(f"Performance metrics update failed: {e}")
 
-    # def get_system_status(self) -> Dict[str, Any]:
-    #    """Get comprehensive system status"""
-    #    current_time = time.time()
-    #    uptime = current_time - self.start_time
-    #
-    #    status = {
-    #        'system_id': self.system_id,
-    #        'uptime_seconds': uptime,
-    #        'uptime_hours': uptime / 3600,
-    #        'performance_metrics': self.performance_metrics.copy(),
-    #        'active_tasks': len(self.active_tasks),
-    #        'completed_tasks': len(self.completed_tasks),
-    #        'domain_expertise': self.domain_expertise_levels.copy(),
-    #        'learning_insights': self.learning_engine.get_learning_insights(),
-    #        'system_health': self._assess_system_health(),
-    #        'capabilities': {
-    #            'pytorch_available': PYTORCH_AVAILABLE,
-    #            'tensorflow_available': TENSORFLOW_AVAILABLE,
-    #            'transformers_available': TRANSFORMERS_AVAILABLE,
-    #            'sklearn_available': SKLEARN_AVAILABLE
-    #        },
-    #        'timestamp': current_time
-    #    }
-    #
-    #    # Convert set to list for JSON serialization
-    #    status['performance_metrics']['domains_mastered'] = list(status['performance_metrics']['domains_mastered'])
-    #    return status
-
     def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status including wiki knowledge base"""
         current_time = time.time()
@@ -4112,13 +4043,7 @@ class WorldClassUniversalNeuralSystem:
         # Database status
         db_status = "unknown"
         db_tasks = 0
-        #try:
-        #    if hasattr(self, 'db_connection') and self.db_connection:
-        #        cursor = self.db_connection.cursor()
-        #        cursor.execute("SELECT COUNT(*) FROM universal_ai.tasks")
-        #        db_tasks = cursor.fetchone()[0]
-        #        db_status = "connected"
-        #        cursor.close()
+
         try:
             if hasattr(self, 'database') and self.database and hasattr(self.database, 'db_connection') and self.database.db_connection:
                 cursor = self.database.db_connection.cursor()
@@ -4280,8 +4205,6 @@ class WorldClassUniversalNeuralSystem:
         except Exception as e:
             logger.error(f"Status determination error: {e}")
             return 'unknown'
-
-
 
     def _assess_system_health(self) -> Dict[str, Any]:
         """Assess overall system health"""
@@ -4711,7 +4634,9 @@ class UniversalNeuralAPI:
                 })
 
             except Exception as e:
-                return jsonify({'success': False, 'error': str(e)}), 500        @self.app.route('/api/debug/precheck_components', methods=['GET'])
+                return jsonify({'success': False, 'error': str(e)}), 500
+        
+        @self.app.route('/api/debug/precheck_components', methods=['GET'])
         def debug_precheck_components():
             """Debug endpoint to check precheck component availability"""
             try:
@@ -4762,7 +4687,8 @@ class UniversalNeuralAPI:
                     'success': False,
                     'error': str(e),
                     'timestamp': time.time()
-                }), 500        @self.app.route('/api/debug/system_components', methods=['GET'])
+                }), 500
+        @self.app.route('/api/debug/system_components', methods=['GET'])
         def debug_system_components():
             """Debug endpoint to check system object components"""
             try:
@@ -4811,7 +4737,8 @@ class UniversalNeuralAPI:
                     'success': False,
                     'error': str(e),
                     'timestamp': time.time()
-                }), 500        @self.app.route('/api/debug/comprehensive_precheck', methods=['GET'])
+                }), 500
+        @self.app.route('/api/debug/comprehensive_precheck', methods=['GET'])
         def comprehensive_precheck_debug():
             """Comprehensive debug endpoint to find precheck components"""
             try:
@@ -4940,7 +4867,8 @@ class UniversalNeuralAPI:
                 return jsonify({
                     'success': False,
                     'error': str(e)
-                }), 500        @self.app.route('/api/precheck/direct_access', methods=['GET'])
+                }), 500
+        @self.app.route('/api/precheck/direct_access', methods=['GET'])
         def precheck_direct_access():
             """Try to access precheck processor directly"""
             try:
@@ -4981,9 +4909,6 @@ class UniversalNeuralAPI:
                     'success': False,
                     'error': str(e)
                 }), 500
-
-
-
 
         @self.app.route('/api/precheck/service_health', methods=['GET'])
         def precheck_service_health():
@@ -5063,8 +4988,6 @@ class UniversalNeuralAPI:
                     'error': str(e)
                 }), 500
 
-
-
         @self.app.route('/api/precheck/refresh_services', methods=['POST'])
         def refresh_precheck_services():
             """Force refresh of precheck service data - WORKING VERSION"""
@@ -5124,11 +5047,7 @@ class UniversalNeuralAPI:
                     'error': str(e)
                 }), 500
 
-
-
-
         @self.app.route('/api/wiki/ask', methods=['POST'])
-        # async def wiki_ask_question():
         def wiki_ask_question():
             """Ask a question to the wiki knowledge base"""
             try:
@@ -5171,7 +5090,6 @@ class UniversalNeuralAPI:
                 }), 500
 
         @self.app.route('/api/wiki/ask', methods=['GET'])
-        #async def wiki_ask_question_get():
         def wiki_ask_question_get():
             """Ask a question via GET request"""
             try:
@@ -5250,14 +5168,6 @@ class UniversalNeuralAPI:
                     "status": "error",
                     "error": str(e)
                 }), 500
-
-
-
-
-
-
-
-
 
         @self.app.route('/metrics', methods=['GET'])
         def metrics():
@@ -5444,7 +5354,6 @@ class UniversalNeuralAPI:
                 logger.error("Flask not available - cannot start API server")
 
 async def run_universal_system_demo(universal_system: WorldClassUniversalNeuralSystem):
-# def run_universal_system_demo(universal_system: WorldClassUniversalNeuralSystem):
     """Run a comprehensive demo of the universal system"""
     logger.info("🚀 Starting Universal Neural System Demo")
 
@@ -5510,7 +5419,6 @@ async def run_universal_system_demo(universal_system: WorldClassUniversalNeuralS
     logger.info("=" * 80)
 
     return results
-
 
 def setup_api_server(universal_system):
     """Setup API server using port registry configuration"""
@@ -5976,19 +5884,6 @@ def test_database_connection(universal_system):
         logger.error(f"❌ Database test failed: {e}")
         return False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def main_universal_neural_system():
     """Main function for the World-Class Universal Neural System"""
     global universal_system  # Make it accessible for signal handler
@@ -6065,10 +5960,7 @@ def main_universal_neural_system():
                 logger.error(f"❌ Failed to initialize Universal Neural System: {e}")
                 return
 
-
-
-
-            # ✅ ADD THIS: Main continuous learning loop
+            # Main continuous learning loop
             try:
                 task_counter = 0
                 logger.info("🔄 Starting continuous learning loop...")
@@ -6315,14 +6207,8 @@ def main_universal_neural_system():
                             input_data=input_data,
                             metadata={'source': 'continuous_learning', 'iteration': task_counter}
                         )
-
-                    # Process task asynchronously
-                    # loop = asyncio.new_event_loop()
-                    # asyncio.set_event_loop(loop)
-                    # solution = loop.run_until_complete(universal_system.process_universal_task(continuous_task))
-                    # loop.close()
+              
                         solution = universal_system.process_universal_task(continuous_task)
-
 
                         # Log progress every 10 tasks
                         if task_counter % 10 == 0:
@@ -6359,7 +6245,6 @@ def main_universal_neural_system():
             import traceback
             logger.error(f"Full traceback: {traceback.format_exc()}")
             return
-
 
     except Exception as e:
         logger.error(f"Error: {e}")
@@ -6457,10 +6342,6 @@ signal.signal(signal.SIGTERM, signal_handler)
 if __name__ == "__main__":
     try:
         logger.info("🚀 Starting Intel Universal Neural System...")
-
-        # Initialize GitHub integration first
-        # if github_modules:
-        #    logger.info(f"🎉 GitHub integration active with {len(github_modules)} modules")
 
         # Start the main universal system
         main_universal_neural_system()

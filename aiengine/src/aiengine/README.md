@@ -43,7 +43,7 @@ The **Intel Universal Neural Network System** is a world-class, domain-agnostic 
 
 ### Recommended Requirements
 - **RAM**: 32GB+ for large-scale deployments
-- **GPU**: NVIDIA GPU with CUDA support (optional but recommended)
+- **GPU**: Intel GPU [Optional]
 - **Storage**: SSD with 100GB+ for optimal performance
 
 ## 🔧 Installation

@@ -16,7 +16,7 @@
     "ai-domain-adapter": "ai-domain-adapter.service"
   },
   "python_processes": {
-    "main.py": "/opt/aiengine/main.py",
+    "main.py": "/aiengine/src/aiengine/main.py",
     "prometheus_alert_processor.py": "/aiengine/src/aiengine/monitoring/prometheus_alert_processor.py",
     "basic_dashboard.py": "/aiengine/src/aiengine/services/stubs/basic_dashboard.py",
     "domain_adapter.py": "/aiengine/src/aiengine/services/stubs/domain_adapter.py",

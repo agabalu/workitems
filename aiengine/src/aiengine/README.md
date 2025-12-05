@@ -51,3 +51,206 @@ The **Intel Universal Neural Network System** is a world-class, domain-agnostic 
 ```bash
 git clone <repository-url>
 cd aiengine/src/aiengine
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install system dependencies (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install postgresql-client redis-tools
+
+# Install system dependencies (CentOS/RHEL)
+sudo yum install postgresql redis
+
+# Install PostgreSQL
+sudo apt-get install postgresql postgresql-contrib
+
+# Create database and user
+sudo -u postgres createdb universal_ai_prod
+sudo -u postgres createuser -P your_username
+
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=universal_ai_prod
+POSTGRES_USER=your_username
+POSTGRES_PASSWORD=your_password
+DB_SCHEMA=universal_ai
+
+# Azure OpenAI (Optional)
+AZURE_OPENAI_API_KEY=your_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4
+
+# Azure Authentication (Optional)
+AZURE_CLIENT_ID=your_client_id
+AZURE_CLIENT_SECRET=your_client_secret
+AZURE_TENANT_ID=your_tenant_id
+
+# System Configuration
+ENVIRONMENT=development
+DEPLOYMENT_ID=universal-ai-system
+AI_ENGINE_HOST=localhost
+AI_ENGINE_PORT=8000
+
+# Security
+SSL_ENABLED=true
+ENCRYPTION_ENABLED=true
+RATE_LIMITING_ENABLED=true
+
+# Features
+WIKI_QA_ENABLED=true
+PROMETHEUS_ENABLED=true
+GRAFANA_ENABLED=true
+GITHUB_INTEGRATION_ENABLED=false
+
+services:
+  AI_ENGINE_MAIN:
+    host: localhost
+    port: 8000
+  AI_ENGINE_API:
+    host: localhost
+    port: 8001
+  POSTGRESQL:
+    host: localhost
+    port: 5432
+  PROMETHEUS:
+    host: localhost
+    port: 9090
+  GRAFANA:
+    host: localhost
+    port: 3000
+  REDIS:
+    host: localhost
+    port: 6379
+
+# Quick Start
+python3 main.py
+
+# Check system status
+curl http://localhost:8001/api/system_status
+
+# Test database connection
+curl http://localhost:8001/api/database/status
+
+# Process a sample task
+curl -X POST http://localhost:8001/api/process_task \
+  -H "Content-Type: application/json" \
+  -d '{
+    "domain": "infrastructure",
+    "task_type": "anomaly_detection",
+    "input_data": {
+      "cpu_usage": [0.8, 0.85, 0.9],
+      "memory_usage": [0.7, 0.75, 0.8]
+    }
+  }'
+
+# API Documentation
+# CoreEngpoints
+# Process Universal Task
+POST /api/process_task
+Content-Type: application/json
+
+{
+  "task_id": "optional_custom_id",
+  "domain": "infrastructure|finance|healthcare|natural_language|computer_vision|manufacturing",
+  "task_type": "classification|regression|anomaly_detection|time_series_forecasting|sentiment_analysis",
+  "input_data": {...},
+  "metadata": {...}
+}
+
+# Get System Status
+GET /api/system_status
+
+# Get Explanation for Task
+GET /api/explain_task/{task_id}
+
+# Wiki Knowledge Base Query
+POST /api/wiki/ask
+Content-Type: application/json
+
+{
+  "question": "How does precheck validation work?",
+  "max_tokens": 1000,
+  "include_sources": true
+}
+
+# Monitoring Endpoints
+GET /metrics
+
+# Learning Insights
+GET /api/learning_insights
+'''
+
+# Neural Architecture
+Multi-head Attention: 8-head attention mechanism for pattern recognition
+Transformer Encoder: 6-layer transformer for sequence processing
+Adaptive Layers: Dynamic neural layers that adapt to domain requirements
+Domain-specific Heads: Specialized output layers for different domains
+Meta-learning LSTM: 2-layer LSTM for cross-domain knowledge transfer
+🔍 Supported Domains & Tasks
+Infrastructure Management
+Anomaly Detection: System performance anomalies
+Resource Optimization: CPU, memory, network optimization
+Monitoring: Real-time system health monitoring
+Control Systems: Automated system control
+Financial Analysis
+Time Series Forecasting: Market prediction and analysis
+Risk Assessment: Financial risk evaluation
+Regression Analysis: Price and trend prediction
+Classification: Investment categorization
+Healthcare
+Medical Diagnosis: Symptom analysis and diagnosis support
+Pattern Recognition: Medical image analysis
+Decision Support: Treatment recommendation
+Anomaly Detection: Health metric monitoring
+Natural Language Processing
+Sentiment Analysis: Text emotion and opinion analysis
+Text Generation: Automated content creation
+Classification: Document and content categorization
+Question Answering: Knowledge base queries
+Computer Vision
+Image Classification: Object and scene recognition
+Pattern Recognition: Visual pattern analysis
+Anomaly Detection: Visual anomaly identification
+Image Processing: Advanced image manipulation
+Manufacturing
+Quality Control: Product quality assessment
+Predictive Maintenance: Equipment failure prediction
+Process Optimization: Manufacturing process improvement
+Control Systems: Automated manufacturing control
+🛡️ Security Features
+Data Protection
+Encryption at Rest: Database and file encryption
+Encryption in Transit: TLS/SSL for all communications
+API Security: Rate limiting and authentication
+Audit Logging: Complete activity tracking
+Access Control
+Role-based Access: Multi-level user permissions
+API Key Management: Secure API access control
+Session Management: Secure user sessions
+Network Security: Firewall and network isolation support
+Compliance
+Precheck Validation: Automated compliance checking
+Risk Assessment: Security risk evaluation
+Audit Trails: Complete decision tracking
+Data Governance: Data handling compliance
+📊 Monitoring & Observability
+Prometheus Metrics
+System performance metrics
+Task processing statistics
+Model confidence scores
+Resource utilization
+Error rates and patterns
+Grafana Dashboards
+Real-time system monitoring
+Performance analytics
+Domain expertise tracking
+Learning progress visualization
+Alert management
+Logging
+Structured JSON logging
+Multiple log levels (DEBUG, INFO, WARN, ERROR)
+Centralized log management
+Performance tracking
+Error diagnostics

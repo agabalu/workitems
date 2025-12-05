@@ -1,0 +1,57 @@
+Core Module Files:
+1. Universal Types & Domain Management
+   core/universal_types.py - Core data structures and enums
+2. Precheck System
+   core/precheck_engine.py - Precheck analysis engine
+3. Wiki Knowledge Base
+   core/wiki_qa.py - Wiki question-answering system
+4. Azure Integration
+   core/azure_connect.py - Azure services connection
+
+Configuration Files:
+5. Settings & Configuration
+   config/settings.py - Main configuration management
+6. AI Utilities
+   config/ai_utils.py - AI utility functions
+7. Port Registry
+   config/port_registry.py - Service port management
+
+Domain & Task Management:
+8. Domain Registry
+   core/domains/domain_registry.py - Domain configuration
+9. Task Registry
+   core/tasks/task_registry.py - Task type management
+
+Integration Files:
+10. Prometheus Integration
+    prometheus_alert_receiver.py - Prometheus alert handling
+11. Prometheus Metrics
+    core/integrations/prometheus_metrics_exporter.py - Metrics export
+12. Grafana Integration
+    core/integrations/grafana_integration.py - Grafana dashboard integration
+13. Integration Configuration
+    config/integrations.py - Integration settings
+
+GitHub Service:
+14. GitHub Integration
+    services/github_service.py - GitHub integration service
+
+Configuration Data Files:
+15. Environment Configuration
+    /aiengine/src/aiengine/.env - Environment variables
+16. Port Registry Configuration
+    /etc/port-registry.conf - Service port configuration (YAML)
+17. Precheck Configuration
+    config/precheck_config.json - Precheck system configuration
+18. Wiki Data Files
+    config/wiki_extraction*.json - Wiki knowledge base data files
+19. Integration Configuration
+    config/integrations.yaml - Integration settings file
+
+
+Runtime Created Directories:
+The system also creates these directories at runtime:
+logs/ - Log files
+models/ - Saved model states
+knowledge_base/ - Knowledge base storage
+exports/ - Database exports

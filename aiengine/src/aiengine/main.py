@@ -80,7 +80,7 @@ try:
         print(f"   PostgreSQL User: {os.getenv('POSTGRES_USER', 'not configured')}")
         print(f"   PostgreSQL Password: {'configured' if os.getenv('POSTGRES_PASSWORD') else 'not configured'}")
     else:
-        print("⚠️ .env file not found at /opt/aiengine/.env")
+        print("⚠️ .env file not found at /aiengine/src/aiengine/.env")
 
 except ImportError:
     print("⚠️ python-dotenv not installed")
@@ -111,11 +111,11 @@ try:
 except ImportError as e:
     print(f"❌ Failed to import universal types: {e}")
     print("📁 Checking if core/universal_types.py exists...")
-    if os.path.exists('/opt/aiengine/core/universal_types.py'):
+    if os.path.exists('/aiengine/src/aiengine/core/universal_types.py'):
         print("✅ File exists, checking Python path...")
-        if '/opt/aiengine' not in sys.path:
-            sys.path.insert(0, '/opt/aiengine')
-            print("✅ Added /opt/aiengine to Python path")
+        if '/aiengine/src/aiengine' not in sys.path:
+            sys.path.insert(0, '/aiengine/src/aiengine')
+            print("✅ Added /aiengine/src/aiengine to Python path")
             try:
                 from core.universal_types import DomainType, TaskType, UniversalTask, UniversalSolution
                 print("✅ Universal types loaded after path fix")
